@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solid Food Vacation - Fruit Feast Tracker</title>
+  <!-- html2canvas library for saving screen as a picture file -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --bg: #09090b;
+      --card: #121215;
+      --border: #222228;
+      --accent: #f59e0b;
+      --accent-hover: #d97706;
+      --text: #f4f4f5;
+      --muted: #71717a;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --purple: #a855f7;
+      --pink: #ec4899;
+      --red: #ef4444;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 1.5rem 1rem;
+      min-height: 100vh;
+    }
+
+    .app-shell {
+      max-width: 560px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .hero-header {
+      text-align: center;
+      padding: 0.5rem 0;
+    }
+
+    .sub-tag {
+      display: inline-block;
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      margin-bottom: 0.75rem;
+    }
+
+    .score-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .score-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+    }
+
+    .score-box h1 {
+      font-size: 3.75rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.1;
+      margin: 0.2rem 0;
+    }
+
+    .streak-pill {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      padding: 0.25rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .card {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+    }
+
+    .card h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .phase-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .card-top h2 {
+      margin: 0.1rem 0 0 0;
+      font-size: 1.35rem;
+    }
+
+    .badge-status {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--green);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+    }
+
+    /* Maramataka Box */
+    .maramataka-box {
+      background: rgba(168, 85, 247, 0.05);
+      border: 1px solid rgba(168, 85, 247, 0.2);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .maramataka-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--purple);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.3rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .maramataka-desc {
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+    }
+
+    .maramataka-advice {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .metric-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 0.6rem;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .m-label {
+      display: block;
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .m-val {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .m-val.gold { color: var(--accent); }
+    .m-val.purple { color: var(--purple); }
+
+    /* Quick Selection Chips */
+    .section-subtitle {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .chips-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .chip {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.75rem;
+      padding: 0.4rem 0.7rem;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chip:hover {
+      border-color: var(--accent);
+      background: rgba(245, 158, 11, 0.05);
+      color: var(--accent);
+    }
+
+    .quick-buttons-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .quick-btn {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.65rem 0.5rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .quick-btn:hover {
+      border-color: var(--accent);
+      background: #1a1a1e;
+    }
+
+    .field-group {
+      margin-bottom: 0.9rem;
+    }
+
+    .field-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    select, input[type="text"], input[type="file"], input[type="number"] {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.7rem 0.9rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+
+    select:focus, input[type="text"]:focus, input[type="number"]:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    input[type="file"] {
+      padding: 0.35rem;
+    }
+
+    .preview-box.hidden {
+      display: none;
+    }
+
+    .preview-box img {
+      width: 100%;
+      max-height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+
+    /* Camera action buttons */
+    .cam-btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-top: 0.4rem;
+    }
+
+    .btn-secondary-action {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-weight: 600;
+      padding: 0.6rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    .btn-secondary-action:hover {
+      background: #1a1a1e;
+      border-color: var(--muted);
+    }
+
+    .btn-primary {
+      width: 100%;
+      background-color: var(--accent);
+      color: #000;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 0.4rem;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-save-image {
+      width: 100%;
+      background-color: var(--purple);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-bottom: 0.75rem;
+      transition: opacity 0.2s;
+    }
+
+    .btn-save-image:hover { opacity: 0.9; }
+
+    .btn-reset {
+      width: 100%;
+      background-color: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--red);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.65rem;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-bottom: 1rem;
+      transition: all 0.2s;
+    }
+
+    .btn-reset:hover {
+      background-color: rgba(239, 68, 68, 0.2);
+    }
+
+    .btn-sub {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-weight: 600;
+      padding: 0.55rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-sub:hover { background: #1a1a1e; }
+
+    .grid-split {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    @media(min-width: 480px) {
+      .grid-split {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    blockquote {
+      font-style: italic;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.45;
+      border-left: 3px solid var(--accent);
+      padding-left: 0.65rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .quote-by {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text);
+      text-align: right;
+    }
+
+    .badges-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      text-align: center;
+    }
+
+    .badge-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.2rem;
+      border-radius: 8px;
+      font-size: 1.15rem;
+      filter: grayscale(100%);
+      opacity: 0.25;
+    }
+
+    .badge-item small {
+      display: block;
+      font-size: 0.55rem;
+      color: var(--muted);
+      margin-top: 0.1rem;
+    }
+
+    .badge-item.unlocked {
+      filter: none;
+      opacity: 1;
+      border-color: var(--accent);
+      background: rgba(245, 158, 11, 0.05);
+    }
+
+    .journal-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .no-logs {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      padding: 1rem 0;
+    }
+
+    .log-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0.75rem;
+    }
+
+    .log-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .log-card-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .log-card-pts {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .log-card-images {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      margin: 0.25rem 0;
+    }
+
+    .log-card-images img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .log-card-desc {
+      font-size: 0.8rem;
+      color: var(--text);
+    }
+
+    .log-card-timestamp {
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-align: right;
+      border-top: 1px solid var(--border);
+      padding-top: 0.3rem;
+      margin-top: 0.2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-shell" id="capture-area">
+    <!-- Top Score Header -->
+    <header class="hero-header">
+      <span class="sub-tag">🍉 Fruit Feast & Solid Vacation</span>
+      <div class="score-box">
+        <span class="score-title">TOTAL FEAST SCORE</span>
+        <h1 id="total-score">0</h1>
+        <div class="streak-pill">🔥 <span id="streak-count">1</span> Day Streak</div>
+      </div>
+    </header>
+
+    <!-- Progress & Maramataka Phase Card -->
+    <section class="card">
+      <div class="card-top">
+        <div>
+          <span class="phase-label" id="current-day-label">DAY 1 OF 14</span>
+          <h2>Challenge Progress</h2>
+        </div>
+        <div class="badge-status" id="challenge-status-badge">Active</div>
+      </div>
+
+      <!-- Automated Maramataka Box -->
+      <div class="maramataka-box">
+        <div class="maramataka-title">
+          <span>🌙 Maramataka (Lunar Rhythm)</span>
+          <span id="maramataka-date-display">Today</span>
+        </div>
+        <div class="maramataka-desc" id="maramataka-phase-name">Calculating moon phase...</div>
+        <div class="maramataka-advice" id="maramataka-phase-advice">Advice loading...</div>
+      </div>
+
+      <div class="progress-track" style="margin-bottom: 0.5rem;">
+        <div class="progress-info">
+          <span>Goal Completion</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="bar-bg">
+          <div class="bar-fill" id="progress-bar"></div>
+        </div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-box">
+          <span class="m-label">EARNED TODAY</span>
+          <span class="m-val" id="earned-today">+0</span>
+        </div>
+        <div class="metric-box">
+          <span class="m-label">FASTING</span>
+          <span class="m-val gold" id="fasting-total">0h</span>
+        </div>
+        <div class="metric-box">
+          <span class="m-label">WEIGHT</span>
+          <span class="m-val purple" id="current-weight-display">-- kg</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Tap Log Card -->
+    <section class="card">
+      <h2>⚡ Quick Tap Log (Intake & Elimination)</h2>
+      <div class="quick-buttons-grid">
+        <button class="quick-btn" onclick="quickLog('juice', '💧 Juice / Smoothie', 15)">💧 Juice (+15)</button>
+        <button class="quick-btn" onclick="quickLog('fruit', '🍉 Whole Fruit', 10)">🍉 Fruit (+10)</button>
+        <button class="quick-btn" onclick="quickLog('water', '🧊 Pure Water', 8)">🧊 Water (+8)</button>
+        <button class="quick-btn" onclick="quickLog('veg', '🥒 Raw Veg', 5)">🥒 Raw Veg (+5)</button>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem;">
+        <button class="quick-btn" style="border-color: var(--blue); color: var(--blue);" onclick="logFastingBlock()">⏳ +30m Fasting</button>
+        <button class="quick-btn" style="border-color: var(--green); color: var(--green); background: rgba(34,197,94,0.1);" onclick="logBowelMovement()">💩 Quick BM (+10)</button>
+      </div>
+
+      <h2>🌿 Quick Tap Supplements & Healing</h2>
+      <div class="quick-buttons-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 0.5rem;">
+        <button class="quick-btn" style="border-color: var(--purple); color: var(--purple);" onclick="quickLog('ormus', '✨ Ormus Dose', 5)">✨ Ormus Dose</button>
+        <button class="quick-btn" style="border-color: var(--green); color: var(--green);" onclick="quickLog('grounding', '🌱 Feet on Ground / Garden', 5)">🌱 Grounding</button>
+        <button class="quick-btn" onclick="quickLog('habit', '🚶‍♀️ Walk', 5)">🚶‍♀️ Walk</button>
+      </div>
+      <div class="quick-buttons-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 0.5rem;">
+        <button class="quick-btn" onclick="quickLog('habit', '🧘‍♀️ Yoga', 5)">🧘‍♀️ Yoga</button>
+        <button class="quick-btn" onclick="quickLog('habit', '🌀 Rebound', 8)">🌀 Rebound</button>
+        <button class="quick-btn" onclick="quickLog('habit', '🏋️‍♀️ Gym', 8)">🏋️‍♀️ Gym</button>
+      </div>
+      <div class="quick-buttons-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <button class="quick-btn" onclick="quickLog('habit', '🫁 Breath', 5)">🫁 Breath</button>
+        <button class="quick-btn" onclick="quickLog('habit', '🤲 Massage', 5)">🤲 Massage</button>
+        <button class="quick-btn" onclick="quickLog('habit', '📓 Journal', 5)">📓 Journal</button>
+        <button class="quick-btn" onclick="quickLog('habit', '🧖‍♀️ Sauna', 10)">🧖‍♀️ Sauna</button>
+        <button class="quick-btn" onclick="quickLog('habit', '🤸‍♀️ Playing', 5)">🤸‍♀️ Playing</button>
+      </div>
+    </section>
+
+    <!-- Detailed Logging & Daily Stats Card -->
+    <section class="card">
+      <h2>📝 Detailed Intake & Daily Check-In</h2>
+      <form id="feast-form">
+        
+        <!-- Category Selector -->
+        <div class="field-group">
+          <label>Select Category</label>
+          <select id="food-tier" required>
+            <option value="" disabled selected>Choose category...</option>
+            <option value="juice">💧 Juice / Smoothie (+15 pts)</option>
+            <option value="fruit">🍉 Whole Fruit / Melon (+10 pts)</option>
+            <option value="water">🧊 Pure Water (+8 pts)</option>
+            <option value="veg">🥒 Raw Vegetables / Salad (+5 pts)</option>
+            <option value="ormus">✨ Ormus Mineral Dose (+5 pts)</option>
+            <option value="grounding">🌱 Feet on Ground / Nature / Garden Time (+5 pts)</option>
+            <option value="fasting">⏳ Fasting / Water Fast (30m blocks)</option>
+            <option value="bm">💩 Bowel Movement (Elimination Check)</option>
+            <option value="habit">🌿 Healing Practice / Exercise (+5-10 pts)</option>
+          </select>
+        </div>
+
+        <!-- Quick Select Chips for Juice, Fruits, Veg -->
+        <div class="field-group">
+          <span class="section-subtitle">Quick Select Fruits, Juices & Veg (Tap to add):</span>
+          <div class="chips-grid">
+            <span class="chip" onclick="appendItem('Watermelon 🍉')">Watermelon 🍉</span>
+            <span class="chip" onclick="appendItem('Grapes 🍇')">Grapes 🍇</span>
+            <span class="chip" onclick="appendItem('Orange & Lemon Juice 🍊')">Orange/Lemon Juice 🍊</span>
+            <span class="chip" onclick="appendItem('Green Juice (Celery/Cucumber) 🥒')">Green Juice 🥒</span>
+            <span class="chip" onclick="appendItem('Papaya / Melon Bowl 🍈')">Melon Bowl 🍈</span>
+            <span class="chip" onclick="appendItem('Citrus Blend 🍋')">Citrus Blend 🍋</span>
+            <span class="chip" onclick="appendItem('Raw Zucchini / Salad 🥗')">Raw Salad 🥗</span>
+          </div>
+
+          <label>Description / Amount Notes</label>
+          <input type="text" id="food-desc" placeholder="e.g., 500ml fresh watermelon juice or 30m garden time..." required />
+        </div>
+
+        <div class="field-group" id="fasting-blocks-group" style="display: none;">
+          <label>Number of 30-min Fasting Blocks</label>
+          <input type="number" id="fasting-blocks-input" value="1" min="1" max="48" />
+        </div>
+
+        <!-- Daily Vitals: Weight, Sleep, Energy, Mood -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="field-group">
+            <label>Today's Weight (kg)</label>
+            <input type="number" step="0.1" id="daily-weight" placeholder="e.g. 68.5" />
+          </div>
+          <div class="field-group">
+            <label>Sleep (Hours)</label>
+            <input type="number" step="0.5" id="daily-sleep" placeholder="e.g. 8" min="0" max="24" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="field-group">
+            <label>Energy Level (1-10)</label>
+            <select id="energy-level">
+              <option value="10">10 - Electric & Radiant ✨</option>
+              <option value="8">8 - High & Clear ⚡</option>
+              <option value="6" selected>6 - Steady / Balanced 👍</option>
+              <option value="4">4 - Detoxing / Low Energy 🍋</option>
+              <option value="2">2 - Deep Cleansing Rest 🛌</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>Mood State</label>
+            <select id="mood-state">
+              <option value="Vibrant & Radiant ✨">Vibrant & Radiant ✨</option>
+              <option value="Joyful & Peaceful 🌿">Joyful & Peaceful 🌿</option>
+              <option value="Clear-Headed & Focused 🎯">Clear-Headed & Focused 🎯</option>
+              <option value="Grounded & Calm 🌊">Grounded & Calm 🌊</option>
+              <option value="Cleansing / Detoxing 🍋">Cleansing / Detoxing 🍋</option>
+              <option value="Inspired & Motivated 🌟">Inspired & Motivated 🌟</option>
+              <option value="Emotional Release / Processing 💧">Emotional Release / Processing 💧</option>
+              <option value="Fatigue / Healing Rest 🛌">Fatigue / Healing Rest 🛌</option>
+              <option value="Gratitude & Flow 🌸">Gratitude & Flow 🌸</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Photo Inputs: Face & Meal Camera -->
+        <div class="field-group">
+          <label>📸 Face / Skin Radiance Check-In Photo</label>
+          <div class="cam-btn-row">
+            <button type="button" class="btn-secondary-action" onclick="triggerCamera('face-file')">📷 Open Camera</button>
+            <button type="button" class="btn-secondary-action" onclick="triggerUpload('face-file')">📁 Upload Photo</button>
+          </div>
+          <input type="file" id="face-file" accept="image/*" capture="user" style="display:none;" />
+          <div class="preview-box hidden" id="face-preview-box">
+            <img id="face-img-preview" src="" alt="Face Preview" />
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>🍉 Meal / Activity Check-In Photo</label>
+          <div class="cam-btn-row">
+            <button type="button" class="btn-secondary-action" onclick="triggerCamera('meal-file')">📷 Open Camera</button>
+            <button type="button" class="btn-secondary-action" onclick="triggerUpload('meal-file')">📁 Upload Photo</button>
+          </div>
+          <input type="file" id="meal-file" accept="image/*" capture="environment" style="display:none;" />
+          <div class="preview-box hidden" id="meal-preview-box">
+            <img id="meal-img-preview" src="" alt="Meal Preview" />
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Save Entry & Earn Points →</button>
+      </form>
+    </section>
+
+    <!-- Grid Row: Wisdom & Badges -->
+    <div class="grid-split">
+      <section class="card">
+        <h2>🌱 Morse & Rose Wisdom Vault</h2>
+        <blockquote id="quote-text">
+          "It's not what you eat, it's what you eliminate. Cleanse the lymphatic system to truly heal."
+        </blockquote>
+        <span class="quote-by" id="quote-author">— Dr. Robert Morse</span>
+        <button type="button" class="btn-sub" id="next-quote-btn">Next Insight 🔄</button>
+      </section>
+
+      <section class="card">
+        <h2>🏆 Milestone Badges</h2>
+        <div class="badges-row">
+          <div class="badge-item locked" id="b-1">🌱<small>10p</small></div>
+          <div class="badge-item locked" id="b-2">💧<small>50p</small></div>
+          <div class="badge-item locked" id="b-3">⚡<small>120p</small></div>
+          <div class="badge-item locked" id="b-4">👑<small>250p</small></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Journal History Feed -->
+    <section class="card">
+      <h2>📖 Feast Journal & Photo Log</h2>
+      <button type="button" class="btn-save-image" onclick="saveAppAsImage()">📥 Save Full Screen as Picture File (.PNG)</button>
+      <button type="button" class="btn-reset" onclick="resetAppData()">🔄 Reset / Clear All App Data</button>
+      <div id="journal-feed" class="journal-feed">
+        <p class="no-logs">No entries logged yet. Start your feast today!</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const wisdomDatabase = [
+      { quote: "It's not what you eat, it's what you eliminate. Cleanse the lymphatic system to truly heal.", author: "Dr. Robert Morse" },
+      { quote: "The lymphatic system is the sewer system of the body. Keep it moving exclusively with astringent fruits and herbs!", author: "Dr. Robert Morse" },
+      { quote: "Fruits are the highest electrical, electromagnetic foods on the planet. They clean and regenerate cellular structures.", author: "Dr. Robert Morse" },
+      { quote: "Acid stagnation is the root of all disease. Move your lymphatic system with high-water fruits and citrus.", author: "Dr. Robert Morse" },
+      { quote: "The kidneys and the skin are your primary emunctories. When fruit opens filtration, true detoxification begins.", author: "Dr. Robert Morse" },
+      { quote: "A Solid Food Vacation gives your digestive tract the ultimate rest so deep cellular regeneration can take place.", author: "John Rose" },
+      { quote: "Juice feasting floods the body with living bio-photon energy, enzymes, and structured hydration while resting digestion.", author: "John Rose" },
+      { quote: "When you stop eating dense cooked foods, your body redirects massive amounts of vital energy toward cleaning house.", author: "John Rose" },
+      { quote: "The longer you stay on raw juices and whole fruits, the deeper the layers of old waste you pull out of your tissues.", author: "John Rose" },
+      { quote: "Water fasting combined with fruit and juice transitions allows the body to complete major biological housecleaning.", author: "John Rose" }
+    ];
+
+    const startDate = new Date('2026-09-28T00:00:00');
+
+    function updateChallengeDay() {
+      const today = new Date();
+      const diffTime = today - startDate;
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+      const currentDayLabel = document.getElementById('current-day-label');
+      const statusBadge = document.getElementById('challenge-status-badge');
+
+      if (diffDays < 1) {
+        currentDayLabel.innerText = "STARTS THIS MONDAY";
+        statusBadge.innerText = "Upcoming";
+      } else if (diffDays > 14) {
+        currentDayLabel.innerText = "CHALLENGE COMPLETED 🎉";
+        statusBadge.innerText = "Finished";
+      } else {
+        currentDayLabel.innerText = `DAY ${diffDays} OF 14`;
+        statusBadge.innerText = "Active";
+      }
+
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('maramataka-date-display').innerText = today.toLocaleDateString('en-NZ', options);
+      
+      document.getElementById('maramataka-phase-name').innerText = "Turu / Rākaunui Approaching (Waxing Gibbous)";
+      document.getElementById('maramataka-phase-advice').innerText = "High energy and vitality phase. Excellent time for deep hydration, fruit feasting, and absorbing vibrant solar/lunar nutrients. Your body holds strong cleansing capacity.";
+    }
+
+    let totalScore = parseInt(localStorage.getItem('feast_score')) || 0;
+    let earnedToday = parseInt(localStorage.getItem('feast_earned')) || 0;
+    let totalFastingMinutes = parseInt(localStorage.getItem('feast_fasting_mins')) || 0;
+    let latestWeight = localStorage.getItem('feast_latest_weight') || '--';
+    let logHistory = JSON.parse(localStorage.getItem('feast_history')) || [];
+    
+    let activeFaceBase64 = null;
+    let activeMealBase64 = null;
+
+    const totalScoreEl = document.getElementById('total-score');
+    const earnedTodayEl = document.getElementById('earned-today');
+    const fastingTotalEl = document.getElementById('fasting-total');
+    const currentWeightDisplayEl = document.getElementById('current-weight-display');
+    const progressBarEl = document.getElementById('progress-bar');
+    const progressPctEl = document.getElementById('progress-pct');
+    const feastForm = document.getElementById('feast-form');
+    const journalFeed = document.getElementById('journal-feed');
+    const foodTierSelect = document.getElementById('food-tier');
+    const foodDescInput = document.getElementById('food-desc');
+    const fastingBlocksGroup = document.getElementById('fasting-blocks-group');
+    const quoteTextEl = document.getElementById('quote-text');
+    const quoteAuthorEl = document.getElementById('quote-author');
+    const nextQuoteBtn = document.getElementById('next-quote-btn');
+
+    foodTierSelect.addEventListener('change', (e) => {
+      if (e.target.value === 'fasting') {
+        fastingBlocksGroup.style.display = 'block';
+      } else {
+        fastingBlocksGroup.style.display = 'none';
+      }
+    });
+
+    function appendItem(itemStr) {
+      if (foodDescInput.value) {
+        foodDescInput.value += ", " + itemStr;
+      } else {
+        foodDescInput.value = itemStr;
+      }
+      foodDescInput.focus();
+    }
+
+    function triggerCamera(inputId) {
+      const input = document.getElementById(inputId);
+      input.setAttribute('capture', 'environment');
+      input.click();
+    }
+
+    function triggerUpload(inputId) {
+      const input = document.getElementById(inputId);
+      input.removeAttribute('capture');
+      input.click();
+    }
+
+    function compressAndConvertImage(file, callback) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 400;
+          const MAX_HEIGHT = 400;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          callback(canvas.toDataURL('image/jpeg', 0.7));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    document.getElementById('face-file').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        compressAndConvertImage(file, (compressedBase64) => {
+          activeFaceBase64 = compressedBase64;
+          document.getElementById('face-img-preview').src = activeFaceBase64;
+          document.getElementById('face-preview-box').classList.remove('hidden');
+        });
+      }
+    });
+
+    document.getElementById('meal-file').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        compressAndConvertImage(file, (compressedBase64) => {
+          activeMealBase64 = compressedBase64;
+          document.getElementById('meal-img-preview').src = activeMealBase64;
+          document.getElementById('meal-preview-box').classList.remove('hidden');
+        });
+      }
+    });
+
+    function saveAppAsImage() {
+      const element = document.getElementById('capture-area');
+      html2canvas(element, { backgroundColor: '#09090b', scale: 2 }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `Solid-Food-Vacation-Log-${new Date().toISOString().slice(0,10)}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+
+    function resetAppData() {
+      if (confirm("Are you sure you want to reset all points, logs, and progress for a fresh start?")) {
+        localStorage.clear();
+        totalScore = 0;
+        earnedToday = 0;
+        totalFastingMinutes = 0;
+        latestWeight = '--';
+        logHistory = [];
+        renderApp();
+      }
+    }
+
+    function renderApp() {
+      totalScoreEl.innerText = totalScore;
+      earnedTodayEl.innerText = `+${earnedToday}`;
+      
+      const hours = (totalFastingMinutes / 60).toFixed(1);
+      fastingTotalEl.innerText = `${hours}h`;
+
+      if (latestWeight !== '--') {
+        currentWeightDisplayEl.innerText = `${latestWeight} kg`;
+      }
+      
+      const pct = Math.min(Math.round((totalScore / 250) * 100), 100);
+      progressBarEl.style.width = `${pct}%`;
+      progressPctEl.innerText = `${pct}%`;
+
+      renderHistory();
+      evaluateBadges();
+      updateChallengeDay();
+    }
+
+    function quickLog(tier, label, pts) {
+      let desc = prompt(`Enter notes for ${label}:`, "Completed successfully");
+      if (desc === null) return;
+
+      totalScore += pts;
+      earnedToday += pts;
+
+      const now = new Date();
+      const timestampStr = now.toLocaleDateString() + ' at ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      const newEntry = {
+        id: Date.now(),
+        categoryLabel: label,
+        desc: desc || label,
+        points: pts,
+        faceImage: null,
+        mealImage: null,
+        timestamp: timestampStr
+      };
+
+      logHistory.unshift(newEntry);
+      saveAndRefresh();
+    }
+
+    function logFastingBlock() {
+      let blocks = prompt("How many 30-minute fasting blocks?", "1");
+      if (!blocks || isNaN(blocks)) return;
+      let count = parseInt(blocks);
+      let pts = count * 5;
+      let mins = count * 30;
+
+      totalScore += pts;
+      earnedToday += pts;
+      totalFastingMinutes += mins;
+
+      const now = new Date();
+      const timestampStr = now.toLocaleDateString() + ' at ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      const newEntry = {
+        id: Date.now(),
+        categoryLabel: '⏳ Water Fasting',
+        desc: `${mins} mins (${count} x 30m blocks)`,
+        points: pts,
+        faceImage: null,
+        mealImage: null,
+        timestamp: timestampStr
+      };
+
+      logHistory.unshift(newEntry);
+      saveAndRefresh();
+    }
+
+    function logBowelMovement() {
+      let desc = prompt("Bowel movement elimination check notes:", "Good elimination check");
+      if (desc === null) return;
+
+      let pts = 10;
+      totalScore += pts;
+      earnedToday += pts;
+
+      const now = new Date();
+      const timestampStr = now.toLocaleDateString() + ' at ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      const newEntry = {
+        id: Date.now(),
+        categoryLabel: '💩 Bowel Movement',
+        desc: desc || 'Elimination tracked',
+        points: pts,
+        faceImage: null,
+        mealImage: null,
+        timestamp: timestampStr
+      };
+
+      logHistory.unshift(newEntry);
+      saveAndRefresh();
+    }
+
+    feastForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const tier = foodTierSelect.value;
+      const desc = foodDescInput.value;
+      const weightVal = document.getElementById('daily-weight').value;
+      const sleepVal = document.getElementById('daily-sleep').value;
+      const energyVal = document.getElementById('energy-level').value;
+      const moodVal = document.getElementById('mood-state').value;
+      
+      let pointsAwarded = 0;
+      let categoryLabel = '';
+
+      if (tier === 'juice') {
+        pointsAwarded = 15;
+        categoryLabel = '💧 Juice / Smoothie';
+      } else if (tier === 'fruit') {
+        pointsAwarded = 10;
+        categoryLabel = '🍉 Whole Fruit';
+      } else if (tier === 'water') {
+        pointsAwarded = 8;
+        categoryLabel = '🧊 Pure Water';
+      } else if (tier === 'veg') {
+        pointsAwarded = 5;
+        categoryLabel = '🥒 Raw Veg';
+      } else if (tier === 'ormus') {
+        pointsAwarded = 5;
+        categoryLabel = '✨ Ormus Dose';
+      } else if (tier === 'grounding') {
+        pointsAwarded = 5;
+        categoryLabel = '🌱 Grounding / Garden';
+      } else if (tier === 'fasting') {
+        const blocksCount = parseInt(document.getElementById('fasting-blocks-input').value) || 1;
+        pointsAwarded = blocksCount * 5;
+        const mins = blocksCount * 30;
+        totalFastingMinutes += mins;
+        categoryLabel = '⏳ Water Fasting';
+      } else if (tier === 'bm') {
+        pointsAwarded = 10;
+        categoryLabel = '💩 Bowel Movement';
+      } else if (tier === 'habit') {
+        pointsAwarded = 8;
+        categoryLabel = '🌿 Healing Practice';
+      }
+
+      if (weightVal) {
+        latestWeight = weightVal;
+        localStorage.setItem('feast_latest_weight', latestWeight);
+      }
+
+      totalScore += pointsAwarded;
+      earnedToday += pointsAwarded;
+
+      let fullDesc = `${desc} | Energy: ${energyVal}/10 | Mood: ${moodVal}`;
+      if (sleepVal) fullDesc += ` | Sleep: ${sleepVal}h`;
+      if (weightVal) fullDesc += ` | Wt: ${weightVal}kg`;
+      
+      const now = new Date();
+      const timestampStr = now.toLocaleDateString() + ' at ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      const newEntry = {
+        id: Date.now(),
+        categoryLabel,
+        desc: fullDesc,
+        points: pointsAwarded,
+        faceImage: activeFaceBase64,
+        mealImage: activeMealBase64,
+        timestamp: timestampStr
+      };
+
+      logHistory.unshift(newEntry);
+      saveAndRefresh();
+
+      feastForm.reset();
+      fastingBlocksGroup.style.display = 'none';
+      activeFaceBase64 = null;
+      activeMealBase64 = null;
+      document.getElementById('face-preview-box').classList.add('hidden');
+      document.getElementById('meal-preview-box').classList.add('hidden');
+    });
+
+    function saveAndRefresh() {
+      try {
+        localStorage.setItem('feast_score', totalScore);
+        localStorage.setItem('feast_earned', earnedToday);
+        localStorage.setItem('feast_fasting_mins', totalFastingMinutes);
+        localStorage.setItem('feast_history', JSON.stringify(logHistory));
+      } catch (err) {
+        alert("Storage limit reached! Try logging without photos or clear old entries.");
+      }
+      renderApp();
+    }
+
+    function renderHistory() {
+      if (logHistory.length === 0) {
+        journalFeed.innerHTML = `<p class="no-logs">No entries logged yet. Start your feast today!</p>`;
+        return;
+      }
+
+      journalFeed.innerHTML = '';
+      logHistory.forEach(entry => {
+        const item = document.createElement('div');
+        item.classList.add('log-card');
+        
+        let imgHtml = '';
+        if (entry.mealImage || entry.faceImage) {
+          imgHtml += `<div class="log-card-images">`;
+          if (entry.mealImage) imgHtml += `<img src="${entry.mealImage}" alt="Meal Photo">`;
+          if (entry.faceImage) imgHtml += `<img src="${entry.faceImage}" alt="Face Photo" style="border-radius: 50%;">`;
+          imgHtml += `</div>`;
+        }
+
+        item.innerHTML = `
+          <div class="log-card-header">
+            <span class="log-card-tag">${entry.categoryLabel}</span>
+            <span class="log-card-pts">+${entry.points} pts</span>
+          </div>
+          ${imgHtml}
+          <p class="log-card-desc">${entry.desc}</p>
+          <div class="log-card-timestamp">📅 ${entry.timestamp || 'Recorded Today'}</div>
+        `;
+        journalFeed.appendChild(item);
+      });
+    }
+
+    function evaluateBadges() {
+      if (totalScore >= 10) document.getElementById('b-1').classList.add('unlocked');
+      if (totalScore >= 50) document.getElementById('b-2').classList.add('unlocked');
+      if (totalScore >= 120) document.getElementById('b-3').classList.add('unlocked');
+      if (totalScore >= 250) document.getElementById('b-4').classList.add('unlocked');
+    }
+
+    let qIdx = 0;
+    nextQuoteBtn.addEventListener('click', () => {
+      qIdx = (qIdx + 1) % wisdomDatabase.length;
+      quoteTextEl.innerText = `"${wisdomDatabase[qIdx].quote}"`;
+      quoteAuthorEl.innerText = `— ${wisdomDatabase[qIdx].author}`;
+    });
+
+    renderApp();
+  </script>
+</body>
+</html>
